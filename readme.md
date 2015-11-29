@@ -86,11 +86,6 @@ I should also note that I am aware of other research in to conveying images on t
 
 When conveying information from one sence modality to another, I believe its very important not to loose information in the process. If you can provide roughly the same or better resolution in the second sence, the brain will have a much easier time of decoding the information. A mapping such as the vOICe I believe certainly gets extremely close to achieving this. 
 
-### How it works (technical info)
-The tone and noise generation is handled by [libaudioverse](https://github.com/camlorn/libaudioverse).
-
-Audio Screen detects when your finger touches, moves around, or comes off the screen. 
-
-Each time NVDA detects your finger moving to a set of coordinates, The add-on captures  a bitmap of the part of the screen image within a rectangle centered around those coordinates by using NVDA's screenBitmap module. 
-
-Once it has this image, it submits it to audioScreen's imagePlayer module, whos job it is to actually map the image to sound. 
+### Mapping color to sound
+Although access to basic diagrams such as maps and other line-based drawings have many practical applications for the blind, there is also an argument that access to color images such as in art or the beauty of the world, has some subjective importance. For example  how colors vary in a rainbow, or a picture of the earth from space. These things are very hard to describe in words.
+ 
