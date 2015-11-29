@@ -38,7 +38,8 @@ Some examples:
 * An installed copy of NVDA 2015.4 or higher
 * Windows 8 Operating system or later
 * A Windows 8/10 compatible touch screen, otherwise a mouse. 
-
+* Visual feedback for touch must be turned off in Windows. Search for Change Touch Input setting in the start screen, and in that dialog uncheck Show visual feedback when touching the screen.
+ 
 ## Download
 * Download [AudioScreen 1.1 [NVDA add-on file]](http://www.nvaccess.org/audioScreen/audioScreen-1.1.nvda-addon).
 * Download [Example images [zip file]](http://www.nvaccess.org/audioScreen/audioScreenImages.zip).
@@ -46,6 +47,8 @@ Some examples:
 ## Running AudioScreen
 After downloading the Audio Screen add-on, with NVDA running simply press enter on the file in Windows Explorer to have NVDA install it for you. Alternatively, you can open Manage Add-ons found under Tools in the NVDA menu, and add it from there. After the add-on is installed, NVDA will ask to be restarted. 
 
+Important: Visual feedback for touch must be turned off in Windows. Search for Change Touch Input setting in the start screen, and in that dialog uncheck Show visual feedback when touching the screen.
+ 
 While NVDA is running with this add-on installed, open an interesting image in full-screen (For example, use Internet Explorer to display one of the example svg files, making sure to maximize it and put it in full-screen with f11). 
 
 AudioScreen is off by default, so turn it on by switching to one of its modes by pressing NVDA+control+a. This toggles between Pitch stereo grey, HSV color, and off.
