@@ -3,6 +3,8 @@ By Michael Curran, NV Access Limited
 ## Introduction
 Audio Screen is an add-on for the [NVDA Screen Reading software](http://www.nvaccess.org/). Audio Screen can allow a blind person to move a finger around a Windows 8+ compatible touch screen, and hear the part of the image under their finger. If a touch screen is not available, the mouse can be moved instead, though this is some what less accurate for the user as mouse movement is relative.
 
+Here a [demonstration of AudioScreen by Michael Curran [mp3 file, 17 mb]](http://www.nvaccess.org/audioScreen/audioScreenDemo20151129.mp3) where he demonstrates the various modes, and uses it to explore a map of Australia, a rainbow, the earth from space, a cartoon house, and a sun set.
+
 As Audio Screen requires NVDA to run, the user will therefore also receive speech feedback such as the name of the control or text, directly under their finger. 
 
 Audio Screen can be seen as an experimental alternative way for blind people to view basic images such as diagrams and maps when no other tactile format is available. 
