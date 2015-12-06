@@ -1,4 +1,5 @@
 import sys
+import sys
 import os
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'deps'))
@@ -26,11 +27,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	audioScreenModes=[
 		(_("Off"),None),
-		(_("pitch stereo grey"),imagePlayer.ImagePlayer_pitchStereoGrey,32,16),
-		(_("HSV Color"),imagePlayer.ImagePlayer_hsv,3,3),
+		(_("pitch stereo grey"),imagePlayer.ImagePlayer_pitchStereoGrey,64,64),
+		(_("HSV Color"),imagePlayer.ImagePlayer_hsv,2,2),
 	]
 
 	def __init__(self):
+		self._lastCoords=None
 		self.curAudioScreenMode=0
 		self.imagePlayer=self.screenBitmap=None
 		if touchHandler.handler:
@@ -39,6 +41,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def playAt(self,x,y):
 		if not self.imagePlayer: return
+		coords=(x,y)
+		if coords==self._lastCoords:
+			return
+		self._lastCoords=coords
 		width=self.screenBitmap.width
 		height=self.screenBitmap.height
 		x=x-(width/2)
@@ -57,8 +63,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_toggleAudioScreen(self,gesture):
 		self.curAudioScreenMode=(self.curAudioScreenMode+1)%len(self.audioScreenModes)
 		modeInfo=self.audioScreenModes[self.curAudioScreenMode]
+		if self.imagePlayer:
+			imagePlayer=self.imagePlayer
+			self.imagePlayer=None
+			imagePlayer.terminate()
+		self.screenBitmap=None
 		if modeInfo[1] is None:
-			self.imagePlayer=self.screenBitmap=None
 			ui.message(_("AudioScreen off"))
 		else:
 			self.imagePlayer=modeInfo[1](*modeInfo[2:])

@@ -1,5 +1,6 @@
 from __future__ import division
 
+import threading
 import time
 import colorsys
 import libaudioverse
@@ -10,60 +11,103 @@ fadeLength=0.1
 class ImagePlayer_pitchStereoGrey(object):
 
 	reverseBrightness=False
+	scanDuration=1.5
 
-	def __init__(self,width,height,baseFreq=110,octiveCount=7):
+	def __init__(self,width,height,baseFreq=110,octiveCount=7.5):
 		libaudioverse.initialize()
 		self.width=width
 		self.height=height
-		self.lavSim=libaudioverse.Simulation()
-		self.lavWaves=[]
-		self.lavPanners=[]
-		for x in xrange(self.height):
-			lavPanner=libaudioverse.AmplitudePannerNode(self.lavSim)
-			#lavPanner.azimuth=((x/self.height)*180)-90
-			lavPanner.connect_simulation(0)
-			self.lavPanners.append(lavPanner)
-			lavWave=libaudioverse.SineNode(self.lavSim)
-			lavWave.mul=0
-			lavWave.connect(0,lavPanner,0)
-			self.lavWaves.append(lavWave)
-		self.setFrequences(baseFreq,octiveCount)
-		self.lavSim.set_output_device(-1)
-
-	def setFrequences(self,baseFreq,octiveCount):
-		for x in xrange(self.height):
-			self.lavWaves[x].frequency.value=baseFreq*((2**octiveCount)**(x/self.height))
 		self.baseFreq=baseFreq
 		self.octiveCount=octiveCount
+		self.lavSim=libaudioverse.Simulation()
+		self.lavPanner=libaudioverse.MultipannerNode(self.lavSim,"default")
+		self.lavPanner.strategy=libaudioverse.PanningStrategies.hrtf
+		self.lavPanner.should_crossfade=False
+		self.lavPanner.connect_simulation(0)
+		self.lavWaves=[]
+		for x in xrange(self.height):
+			lavPanner=libaudioverse.AmplitudePannerNode(self.lavSim)
+			lavPanner.should_crossfade=False
+			lavPanner.connect_simulation(0)
+			lavWave=libaudioverse.SineNode(self.lavSim)
+			lavWave.mul=0
+			lavWave.frequency.value=self.baseFreq*((2**self.octiveCount)**(x/self.height))
+			lavWave.connect(0,lavPanner,0)
+			lavWave.connect(0,self.lavPanner,0)
+			self.lavWaves.append((lavWave,lavPanner))
+		self.lavSim.set_output_device(-1)
+		self.lavSim.set_block_callback(self.lavBlockCallback)
 
-	def setNewImage(self,imageData,maxBrightness=255):
-		with self.lavSim:
+	_imageData=None
+	_isExpandedImage=False
+	_hasNewImage=False
+	_imageLock=threading.Lock()
+	_nextUpdateTime=0
+
+	def setNewImage(self,imageData,isExpandedImage=True):
+		with self._imageLock:
+			self._imageData=imageData
+			self._isExpandedImage=isExpandedImage
+			self._hasNewImage=True
+
+	def lavBlockCallback(self,lavSim,curTime):
+		with self._imageLock:
+			wasNewImage=self._hasNewImage
+			self._hasNewImage=False
+			imageData=self._imageData
+		maxBrightness=255
+		if wasNewImage:
+			self.lavPanner.azimuth.value=0
+			if not imageData:
+				for y in xrange(self.height):
+					lavWave=self.lavWaves[y][0]
+					lavWave.mul.value=0
+				return
+			self.lavPanner.mul.value=0
 			for y in xrange(self.height):
 				index=-1-y;
-				lavWave=self.lavWaves[index]
-				lavPanner=self.lavPanners[index]
-				if imageData:
-					left=0
-					right=0
-					brightest=0
-					for x in xrange(self.width):
-						rRatio=x/self.width
-						lRatio=1-rRatio
-						px=rgbPixelBrightness(imageData[y][x])
-						if self.reverseBrightness:
-							px=maxBrightness-px
-						brightest=max(brightest,px)
-						left+=px*lRatio
-						right+=px*rRatio
-					lavWave.mul.linear_ramp_to_value(fadeLength,(brightest/maxBrightness)/self.height)
-					if left or right:
-						lavPanner.azimuth.linear_ramp_to_value(fadeLength,((right-left)/max(left,right))*90)
-					else:
-						lavPanner.azimuth.linear_ramp_to_value(fadeLength,0)
+				lavWave,lavPanner=self.lavWaves[index]
+				lavPanner.mul.value=1
+				left=0
+				right=0
+				brightest=0
+				for x in xrange(self.width):
+					rRatio=x/self.width
+					lRatio=1-rRatio
+					px=rgbPixelBrightness(imageData[y][x])
+					if self.reverseBrightness:
+						px=maxBrightness-px
+					brightest=max(brightest,px)
+					left+=px*lRatio
+					right+=px*rRatio
+				lavWave.mul.value=(brightest/maxBrightness)/self.height
+				if left or right:
+					lavPanner.azimuth.value=((right-left)/max(left,right))*90
 				else:
-					lavWave.mul.linear_ramp_to_value(fadeLength,0)
+					lavPanner.azimuth.value=0
+			self._nextUpdateTime=curTime+0.5
+		elif imageData and curTime>self._nextUpdateTime:
+			self.lavPanner.mul.value=1
+			self.lavPanner.azimuth.value=-90
+			self.lavPanner.azimuth.linear_ramp_to_value(self.scanDuration,90)
+			for y in xrange(self.height):
+				index=-1-y;
+				lavWave,lavPanner=self.lavWaves[index]
+				lavPanner.mul.value=0
+				envelopeValues=[0]
+				for x in xrange(self.width):
+					px=rgbPixelBrightness(imageData[y][x])/maxBrightness
+					if self.reverseBrightness:
+						px=1-px
+					envelopeValues.append(px*0.075)
+				envelopeValues.append(0)
+				lavWave.mul.envelope(time=0,duration=self.scanDuration,values=envelopeValues)
+			self._nextUpdateTime=curTime+self.scanDuration+0.1
 
-	def __del__(self):
+	def terminate(self):
+		for y in xrange(self.height):
+				lavWave=self.lavWaves[y][0]
+				lavWave.mul.value=0
 		self.lavSim.clear_output_device()
 
 class ImagePlayer_hsv(object):
@@ -114,7 +158,7 @@ class ImagePlayer_hsv(object):
 		self.lavWave2.mul.value=v*s*(1-iH_imag)*0.075
 		self.lavNoise.mul.value=(1-s)*v*0.4
 
-	def __del__(self):
+	def terminate(self):
 		self.lavSim.clear_output_device()
 
 
