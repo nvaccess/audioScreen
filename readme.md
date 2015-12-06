@@ -16,6 +16,7 @@ AudioScreen has two modes of output: "pitch stereo grey" for investigating lines
 In this mode, AudioScreen represents the image under your finger as multiple tones that vary in pitch, volume and stereo position. The idea is based on the vOICe visual-to-auditory mapping system by Peter Meijor. (www.seeingwithsound.com) 
 audio Screen strives to provide roughly the same information your finger would for tactile diagrams. You can tell when your finger moves over a line, both horizontally and vertically. 
 For example if your finger crosses a horizontal line as it moves down the screen, you can hear the line move up over your finger. If your finger crosses a vertical line as you move across the screen from left to right, you will hear the line move across your finger from right to left. 
+If you leave your finger stationary at a point on the screen for more than half a second, audioScreen will start sweeping the  audio from left to right, isolating single columns of pixels, providing much more extreme detail of the image to help with detecting patterns etc.
 
 ## HSV Color mode
 
@@ -43,7 +44,7 @@ Some examples:
 * Visual feedback for touch must be turned off in Windows. Search for Change Touch Input setting in the start screen, and in that dialog uncheck Show visual feedback when touching the screen.
  
 ## Download
-* Download [AudioScreen 1.1 [NVDA add-on file]](http://www.nvaccess.org/audioScreen/audioScreen-1.1.nvda-addon).
+* Download [AudioScreen 1.2 [NVDA add-on file]](http://www.nvaccess.org/audioScreen/audioScreen-1.2.nvda-addon).
 * Download [Example images [zip file]](http://www.nvaccess.org/audioScreen/audioScreenImages.zip).
 
 ## Running AudioScreen
