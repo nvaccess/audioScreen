@@ -106,6 +106,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self._lastRect=None
 		self.curAudioScreenMode=0
 		self.imagePlayer=self.screenBitmap=None
+		item = gui.mainFrame.sysTrayIcon.preferencesMenu.Append(wx.ID_ANY,_("&AudioScreen..."),_("AudioScreen"))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.script_showUI, item)
 		super(GlobalPlugin,self).__init__()
 
 	def terminate(self):

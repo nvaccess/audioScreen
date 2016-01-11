@@ -74,7 +74,7 @@ This command toggles between several modes:
 This command will play NVDA's current navigator object, by performing multiple vOICe-style stereo sweeps across it.
 
 ### Show Settings UI (Press NVDA+shift+a)
-This brings up a settings dialog which allows you to change multiple options for audioScreen.
+This brings up a settings dialog which allows you to change multiple options for audioScreen. The Settings UI can also be launched by choosing AudioScreen... found under Preferences in the NVDA menu.
 
 ## Settings
 
