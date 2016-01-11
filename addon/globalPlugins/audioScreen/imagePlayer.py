@@ -114,8 +114,8 @@ class ImagePlayer_pitchStereoGrey(object):
 		else:
 			if not detailed:
 				self._playWholeImage(imageData)
-			sweepDelay=0 if detailed else 0.5
-			self._sweepImage(imageData,self.sweepDelay,self.sweepDuration,self.sweepCount)
+			sweepDelay=0 if detailed else self.sweepDelay
+			self._sweepImage(imageData,sweepDelay,self.sweepDuration,self.sweepCount)
 
 	def terminate(self):
 		for y in xrange(self.height):
