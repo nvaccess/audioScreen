@@ -125,6 +125,22 @@ The frequency (in HZ) that represents blue. The frequency rises through aqua, gr
 #### highest frequency (red) in HZ
 The frequency (in HZ) that represents red. The frequency falls through orange, yellow, green, aqua, to blue. As the color spectrum raps around from blue back to red through purple, purples are represented by both the low (blue) frequency and high (red) frequency at differing volume ratios. I.e. A red-ish purple will be mostly the high (red) frequency with a small amount of the low (blue) frequency.
 
+## Developing and Packaging from source
+
+Clone the AudioScreen repository with the command:
+git clone https://www.github.com/nvaccess/audioScreen
+
+[Python 2.7](http://www.python.org/)  is required for building and developing this project.
+
+AudioScreen depends on [libaudioverse](https://www.github.com/camlorn/libaudioverse):
+* cd to the audioScreen repository you cloned with git
+* Run the command: pip install --ignore-installed -t addon\globalPlugins\audioScreen\deps libaudioverse
+
+### Packaging the NVDA add-on
+In the addon directory:
+* Edit manifest.ini to set the version of the add-on etc.
+* Create a zip file using your favorite zip tool, including both manifest.ini and the globalPlugins directory. It is important that both manifest.ini and globalPlugins be in the root of the zip file, I.e. no interviening directory. The zip file should have a.nvda-addon extension.
+
 ## Background
 For quite some time now, I have wanted a way to get access as a blind person to maps and basic diagrams with out the hassles of having to produce them in a tactile format. 
 

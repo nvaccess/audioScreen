@@ -2,4 +2,3 @@
 *.pyo
 *.nvda-addon
 addon/globalPlugins/audioScreen/deps
-addon/manifest.ini
