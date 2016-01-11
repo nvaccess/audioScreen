@@ -14,10 +14,14 @@ AudioScreen has two modes of output: "pitch stereo grey" for investigating lines
 ## Pitch Stereo Grey mode
 
 In this mode, AudioScreen represents the image under your finger as multiple tones that vary in pitch, volume and stereo position. The idea is based on the vOICe visual-to-auditory mapping system by Peter Meijor. (www.seeingwithsound.com) 
-audio Screen strives to provide roughly the same information your finger would for tactile diagrams. You can tell when your finger moves over a line, both horizontally and vertically. 
+audio Screen strives to provide roughly the same information your finger would for tactile diagrams. You can tell when your finger or mouse moves over a line, both horizontally and vertically. 
 For example if your finger crosses a horizontal line as it moves down the screen, you can hear the line move up over your finger. If your finger crosses a vertical line as you move across the screen from left to right, you will hear the line move across your finger from right to left. 
-If you leave your finger stationary at a point on the screen for more than half a second, audioScreen will start sweeping the  audio from left to right, isolating single columns of pixels, providing much more extreme detail of the image to help with detecting patterns etc.
+If you leave your finger or mouse stationary at a point on the screen for more than half a second, audioScreen will start sweeping the  audio from left to right, isolating single columns of pixels, providing much more extreme detail of the image to help with detecting patterns etc.
 
+In NVDA 2016.1 or later, If you place more than one finger on the screen at a time, audioScreen will sweep over the image bounded by all your fingers. For example, placing one finger at the top left of a large image, and one fingr at the bottom right, audioScreen will sweep over the entire image.
+
+A part from receiving feedback from touch input or a mouse, you can also instruct audioScreen to sweep over an entire image or control, via its play navigator object command. This will perform multiple vOICe-style sweeps over NVDA's current navigator object.
+ 
 ## HSV Color mode
 
 In this mode, AudioScreen will convey the color (specifically hue, saturation and brightness) of the image under your finger. 
@@ -38,13 +42,13 @@ Some examples:
 * Dark grey: quiet random noise.
 
 ## System requirements
-* An installed copy of NVDA 2015.4 or higher
+* An installed copy of NVDA 2015.4 or higher (NVDA 2016.1 or higher for multi-finger sweeping)
 * Windows 8 Operating system or later
 * A Windows 8/10 compatible touch screen, otherwise a mouse. 
 * Visual feedback for touch must be turned off in Windows. Search for Change Touch Input setting in the start screen, and in that dialog uncheck Show visual feedback when touching the screen.
  
 ## Download
-* Download [AudioScreen 1.2 [NVDA add-on file]](http://www.nvaccess.org/audioScreen/audioScreen-1.2.nvda-addon).
+* Download [AudioScreen 1.4 [NVDA add-on file]](http://www.nvaccess.org/audioScreen/audioScreen-1.4.nvda-addon).
 * Download [Example images [zip file]](http://www.nvaccess.org/audioScreen/audioScreenImages.zip).
 
 ## Running AudioScreen
@@ -56,21 +60,70 @@ While NVDA is running with this add-on installed, open an interesting image in f
 
 AudioScreen is off by default, so turn it on by switching to one of its modes by pressing NVDA+control+a. This toggles between Pitch stereo grey, HSV color, and off.
 
-Now move your finger around the screen and start listening to the image under your finger. 
+Now move your finger or mouse around the screen and start listening to the image under your finger. 
 As NVDA can also speak controls and text under your finger, viewing an SVG map or diagram works great, as Internet Explorer will allow NVDA to speak the title and or description for any shape your finger moves over, assuming that a title and or description have been properly defined using the title and desc tags appropriately in the SVG file. 
 
-## Settings
-### Audio Mode (Press NVDA+Control+a)
+## Commands
+### Change Audio Mode (Press NVDA+Control+a)
 This command toggles between several modes: 
 * pitch stereo grey: for investigating lines and contours of images (useful for maps and diagrams etc)
 * HSV color: for investigating the color variation of images (useful for photographs).
 * Off [default]: completely disables AudioScreen.
 
-### Reverse brightness (press NVDA+shift+a):
-When in pitch stereo grey mode, this toggles between light on dark and dark on light. If viewing an image  made of black lines on a white background, it may be useful to switch to light on dark so that it considers black a s brighter than white.
+### Play Navigator Object (Press NVDA+alt+a)
+This command will play NVDA's current navigator object, by performing multiple vOICe-style stereo sweeps across it.
+
+### Show Settings UI (Press NVDA+shift+a)
+This brings up a settings dialog which allows you to change multiple options for audioScreen.
+
+## Settings
+
+### AudioScreen Mode
+Choose the desired mode:
+* pitch stereo grey: for investigating lines and contours of images (useful for maps and diagrams etc)
+* HSV color: for investigating the color variation of images (useful for photographs).
+* Off [default]: completely disables AudioScreen.
+
+### Pitch Stereo Grey settings
+
+#### Reverse brightness
+This option allows you to reverse the brightness of the image, so that rather than light being loud and dark being quiet, dark will be loud and light will be quiet. Very useful when playing an image where the foreground objects are darker than the background.
+
+#### Number of columns in stereo field
+How wide (in pixels) the image should be. When moving with your finger or the mouse, this is literally how wide the captured image is. For play navigator object, although the full image is fetched, it is compressed or stretched to fit this width.
+  
+  #### Number of rows (frequencies) 
+How tall (in pixels) the image should be. Each row of pixels is represented by a particular frequency. frequencies are spread out logarithmically. When moving with your finger or the mouse, this is literally how tall the captured image is. For play navigator object, although the full image is fetched, it is compressed or stretched to fit this height.
  
-## Bugs
-There are probably heeps. This is really only an experiment, and I have only ever run it on two machines myself. 
+ #### Lowest frequency in HZ
+ The frequency (in HZ) used for the bottom most row of the image.
+ 
+ #### Highest frequency in HZ
+The frequency (in HZ) Used for the top most row of the image.
+
+#### Initial stereo sweep delay in seconds
+How long audioScreen should wait (in seconds) to start sweeping an image, after your finger or the mouse has moved.
+
+#### Duration of stereo audio sweep in seconds
+How long (in seconds) each sweep should go for. 
+
+#### Number of stereo sweeps
+The number of sweeps that should be played once your finger or the mouse has moved, or when the play navigator object command is run.
+
+### HSV Color settings
+
+#### Horizontal length of capture area in pixels
+The width (in pixels) of the area under your finger or the mouse captured to detect the color. The color is averaged over this area. Smaller values will give more accurate colors, though can cause you to hear more detail than perhaps seen visually.
+
+#### Vertical length of capture area in pixels
+The height (in pixels) of the area under your finger or the mouse captured to detect the color. The color is averaged over this area. Smaller values will give more accurate colors, though can cause you to hear more detail than perhaps seen visually.
+
+#### Lowest frequency (blue) in HZ
+The frequency (in HZ) that represents blue. The frequency rises through aqua, green, yellow, orange, to red. As the color spectrum raps around from red back to blue through purple, purples are represented by both the low (blue) frequency and high (red) frequency at differing volume ratios. I.e. A blue-ish purple will be mostly the low (blue) frequency with a small amount of the high (red) frequency).
+
+ 
+#### highest frequency (red) in HZ
+The frequency (in HZ) that represents red. The frequency falls through orange, yellow, green, aqua, to blue. As the color spectrum raps around from blue back to red through purple, purples are represented by both the low (blue) frequency and high (red) frequency at differing volume ratios. I.e. A red-ish purple will be mostly the high (red) frequency with a small amount of the low (blue) frequency.
 
 ## Background
 For quite some time now, I have wanted a way to get access as a blind person to maps and basic diagrams with out the hassles of having to produce them in a tactile format. 
