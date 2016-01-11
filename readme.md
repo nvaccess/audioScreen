@@ -1,7 +1,7 @@
 # AudioScreen: an experiment inimage accessibility for blind people
 By Michael Curran, NV Access Limited
 ## Introduction
-Audio Screen is an add-on for the [NVDA Screen Reading software](http://www.nvaccess.org/). Audio Screen can allow a blind person to move a finger around a Windows 8+ compatible touch screen, and hear the part of the image under their finger. If a touch screen is not available, the mouse can be moved instead, though this is some what less accurate for the user as mouse movement is relative.
+Audio Screen is an add-on for the [NVDA Screen Reading software](http://www.nvaccess.org/). Audio Screen can allow a blind person to move their finger around a Windows 8+ compatible touch screen, and hear the part of the image under their finger. If a touch screen is not available, the mouse can be moved instead, though this is some what less accurate for the user as mouse movement is relative.
 
 Here a [demonstration of AudioScreen by Michael Curran [mp3 file, 17 mb]](http://www.nvaccess.org/audioScreen/audioScreenDemo20151129.mp3) where he demonstrates the various modes, and uses it to explore a map of Australia, a rainbow, the earth from space, a cartoon house, and a sun set.
 
@@ -13,7 +13,7 @@ AudioScreen has two modes of output: "pitch stereo grey" for investigating lines
 
 ## Pitch Stereo Grey mode
 
-In this mode, AudioScreen represents the image under your finger as multiple tones that vary in pitch, volume and stereo position. The idea is based on the vOICe visual-to-auditory mapping system by Peter Meijor. (www.seeingwithsound.com) 
+In this mode, AudioScreen represents the image under your finger or the mouse as multiple tones that vary in pitch, volume and stereo position. The idea is based on the vOICe visual-to-auditory mapping system by Peter Meijor. (www.seeingwithsound.com) 
 audio Screen strives to provide roughly the same information your finger would for tactile diagrams. You can tell when your finger or mouse moves over a line, both horizontally and vertically. 
 For example if your finger crosses a horizontal line as it moves down the screen, you can hear the line move up over your finger. If your finger crosses a vertical line as you move across the screen from left to right, you will hear the line move across your finger from right to left. 
 If you leave your finger or mouse stationary at a point on the screen for more than half a second, audioScreen will start sweeping the  audio from left to right, isolating single columns of pixels, providing much more extreme detail of the image to help with detecting patterns etc.
