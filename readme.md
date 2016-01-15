@@ -91,14 +91,14 @@ This option allows you to reverse the brightness of the image, so that rather th
 
 #### Number of columns in stereo field
 How wide (in pixels) the image should be. When moving with your finger or the mouse, this is literally how wide the captured image is. For play navigator object, although the full image is fetched, it is compressed or stretched to fit this width.
-  
-  #### Number of rows (frequencies) 
+
+#### Number of rows (frequencies) 
 How tall (in pixels) the image should be. Each row of pixels is represented by a particular frequency. frequencies are spread out logarithmically. When moving with your finger or the mouse, this is literally how tall the captured image is. For play navigator object, although the full image is fetched, it is compressed or stretched to fit this height.
- 
- #### Lowest frequency in HZ
- The frequency (in HZ) used for the bottom most row of the image.
- 
- #### Highest frequency in HZ
+
+#### Lowest frequency in HZ
+The frequency (in HZ) used for the bottom most row of the image.
+
+#### Highest frequency in HZ
 The frequency (in HZ) Used for the top most row of the image.
 
 #### Initial stereo sweep delay in seconds
