@@ -134,12 +134,12 @@ git clone https://www.github.com/nvaccess/audioScreen
 
 AudioScreen depends on [libaudioverse](https://www.github.com/camlorn/libaudioverse):
 * cd to the audioScreen repository you cloned with git
-* Run the command: pip install --ignore-installed -t addon\globalPlugins\audioScreen\deps libaudioverse
+* Run the command: pip install --ignore-installed -t addon\deps libaudioverse
 
 ### Packaging the NVDA add-on
 In the addon directory:
 * Edit manifest.ini to set the version of the add-on etc.
-* Create a zip file using your favorite zip tool, including both manifest.ini and the globalPlugins directory. It is important that both manifest.ini and globalPlugins be in the root of the zip file, I.e. no interviening directory. The zip file should have a.nvda-addon extension.
+* Create a zip file using your favorite zip tool, including the contents of the addon directory. It is important that only the content of the addon directory be included, not the addon directory itself. The zip file should have a.nvda-addon extension.
 
 ## Background
 For quite some time now, I have wanted a way to get access as a blind person to maps and basic diagrams with out the hassles of having to produce them in a tactile format. 

@@ -1,7 +1,8 @@
 import sys
 import os
 
-sys.path.append(os.path.join(os.path.dirname(__file__),'deps'))
+sys.path.append(os.path.join(os.path.dirname(__file__),'../../deps'))
+sys.path.append(os.path.join(os.path.dirname(__file__),'../../'))
 
 import ctypes
 import wx
@@ -16,7 +17,7 @@ import api
 import screenBitmap
 import textInfos
 import ui
-from . import imagePlayer
+import imagePlayer
 
 class AudioScreenDialog(SettingsDialog):
 	title=_("AudioScreen settings")
@@ -222,4 +223,3 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		"kb:NVDA+Control+a":"toggleAudioScreen",
 		"kb:alt+NVDA+a":"playNavigatorObject",
 	}
-
