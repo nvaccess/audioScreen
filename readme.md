@@ -110,6 +110,12 @@ How long (in seconds) each sweep should go for.
 #### Number of stereo sweeps
 The number of sweeps that should be played once your finger or the mouse has moved, or when the play navigator object command is run.
 
+#### Width (in pixels) of the rectangle at the point under your finger / the mouse
+How wide is the capture area when playing a single point on the screen.
+
+#### Height (in pixels) of the rectangle at the point under your finger / the mouse
+How tall is the capture area when playing a single point on the screen.
+
 ### HSV Color settings
 
 #### Horizontal length of capture area in pixels
@@ -132,7 +138,7 @@ git clone https://www.github.com/nvaccess/audioScreen
 
 [Python 2.7](http://www.python.org/)  is required for building and developing this project.
 
-AudioScreen depends on [libaudioverse](https://www.github.com/camlorn/libaudioverse):
+AudioScreen depends on [libaudioverse 0.8](https://www.github.com/camlorn/libaudioverse):
 * cd to the audioScreen repository you cloned with git
 * Run the command: pip install --ignore-installed -t addon\globalPlugins\audioScreen\deps libaudioverse
 
