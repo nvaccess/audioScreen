@@ -90,6 +90,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			("sweepDelay","float",0.5,_("Initial stereo sweep Delay in seconds")), 
 			("sweepDuration","float",4.0,_("Duration of stereo audio sweep in seconds")), 
 			("sweepCount","integer",4,_("Numver of stereo sweeps")), 
+			("captureWidth","integer",32,_("width (in pixels) of the rectangle at the point under your finger / the mouse")),
+			("captureHeight","integer",32,_("height (in pixels) of the rectangle at the point under your finger / the mouse")),
 		]),
 		(_("HSV Color"),imagePlayer.ImagePlayer_hsv,[
 			("width","integer",2,_("Horizontal length of   capture area in pixels")),
@@ -116,8 +118,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def playPoint(self,x,y):
 		if not self.imagePlayer: return
 		screenWidth,screenHeight=api.getDesktopObject().location[2:]
-		width=self.screenBitmap.width
-		height=self.screenBitmap.height
+		width=self.captureWidth
+		height=self.captureHeight
 		x=x-(width/2)
 		y=y-(height/2)
 		self.playRect(x,y,width,height)
@@ -151,6 +153,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			if report: ui.message(_("AudioScreen off"))
 		else:
 			modeConf={k:v for k,v in config.conf["audioScreen_%s"%modeInfo[1].__name__].iteritems()}
+			self.captureWidth=modeConf.pop('captureWidth',modeConf['width'])
+			self.captureHeight=modeConf.pop('captureHeight',modeConf['height'])
 			self.imagePlayer=modeInfo[1](**modeConf)
 			self.screenBitmap=screenBitmap.ScreenBitmap(self.imagePlayer.width,self.imagePlayer.height)
 			if report:
