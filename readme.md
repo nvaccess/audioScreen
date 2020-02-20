@@ -48,7 +48,7 @@ Some examples:
 * Visual feedback for touch must be turned off in Windows. Search for Change Touch Input setting in the start screen, and in that dialog uncheck Show visual feedback when touching the screen.
  
 ## Download
-* Download [AudioScreen 2020.1 [NVDA add-on file]](http://www.nvaccess.org/files/nvda-addons/audioScreen-2020.1.nvda-addon).
+* Download [AudioScreen 2020.1 [NVDA add-on file]](http://www.nvaccess.org/audioScreen/audioScreen-2020.1.nvda-addon).
 * Download [Example images [zip file]](http://www.nvaccess.org/audioScreen/audioScreenImages.zip).
 
 ## Running AudioScreen
