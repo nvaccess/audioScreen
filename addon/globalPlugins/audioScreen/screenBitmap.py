@@ -43,7 +43,7 @@ class ScreenBitmap(object):
 		Captures the part of the screen starting at x,y and extends by w (width) and h (height), and stretches/shrinks it to fit in to the object's bitmap size.
 		"""
 	#Copy the requested content from the screen in to our memory device context, stretching/shrinking its size to fit.
-		gdi32.StretchBlt(self._memDC,0,0,self.width,self.height,self._screenDC,x,y,w,h,winGDI.SRCCOPY)
+		gdi32.StretchBlt(self._memDC,0,0,self.width,self.height,self._screenDC,int(x),int(y),int(w),int(h),winGDI.SRCCOPY)
 		#Fetch the pixels from our memory bitmap and store them in a buffer to be returned
 		buffer=(winGDI.RGBQUAD*self.width*self.height)()
 		gdi32.GetDIBits(self._memDC,self._memBitmap,0,self.height,buffer,ctypes.byref(self._bmInfo),winGDI.DIB_RGB_COLORS);

@@ -1,11 +1,11 @@
-from __future__ import division
+
 
 import math
 import time
 import colorsys
-import libaudioverse
+from . import libaudioverse
 import wx
-from screenBitmap import rgbPixelBrightness
+from .screenBitmap import rgbPixelBrightness
 
 fadeLength=0.05
 sweepGap=0.2
@@ -26,25 +26,25 @@ class ImagePlayer_pitchStereoGrey(object):
 		self.sweepDuration=sweepDuration
 		self.sweepCount=sweepCount
 		self.reverseBrightness=reverseBrightness
-		self.lavSim=libaudioverse.Simulation()
-		self.lavPanner=libaudioverse.MultipannerNode(self.lavSim,"default")
+		self.lavServer=libaudioverse.Server()
+		self.lavPanner=libaudioverse.MultipannerNode(self.lavServer,"default")
 		self.lavPanner.strategy=libaudioverse.PanningStrategies.hrtf
 		self.lavPanner.should_crossfade=False
 		self.lavPanner.mul=0
-		self.lavPanner.connect_simulation(0)
+		self.lavPanner.connect(0,self.lavServer)
 		self.lavWaves=[]
-		for x in xrange(self.height):
-			lavPanner=libaudioverse.AmplitudePannerNode(self.lavSim)
+		for x in range(self.height):
+			lavPanner=libaudioverse.AmplitudePannerNode(self.lavServer)
 			lavPanner.mul=0
 			lavPanner.should_crossfade=False
-			lavPanner.connect_simulation(0)
-			lavWave=libaudioverse.SineNode(self.lavSim)
+			lavPanner.connect(0,self.lavServer)
+			lavWave=libaudioverse.SineNode(self.lavServer)
 			lavWave.mul=0
 			lavWave.frequency.value=self.baseFreq*((2**self.octiveCount)**(x/self.height))
 			lavWave.connect(0,lavPanner,0)
 			lavWave.connect(0,self.lavPanner,0)
 			self.lavWaves.append((lavWave,lavPanner))
-		self.lavSim.set_output_device(-1)
+		self.lavServer.set_output_device("default")
 
 	def _playWholeImage(self,imageData):
 		self.lavPanner.azimuth.value=self.lavPanner.azimuth.value
@@ -52,13 +52,13 @@ class ImagePlayer_pitchStereoGrey(object):
 		self.lavPanner.mul.value=self.lavPanner.mul.value
 		self.lavPanner.mul.linear_ramp_to_value(fadeLength,0)
 		totalVolume=0
-		for y in xrange(self.height):
+		for y in range(self.height):
 			index=-1-y;
 			lavWave,lavPanner=self.lavWaves[index]
 			left=0
 			right=0
 			brightest=0
-			for x in xrange(self.width):
+			for x in range(self.width):
 				rRatio=x/self.width
 				lRatio=1-rRatio
 				px=rgbPixelBrightness(imageData[y][x])
@@ -75,7 +75,7 @@ class ImagePlayer_pitchStereoGrey(object):
 			lavPanner.azimuth.value=lavPanner.azimuth.value
 			lavPanner.azimuth.linear_ramp_to_value(fadeLength,waveAngle)
 		volumeRatio=0.075 if totalVolume<=1.0 else 0.075/totalVolume
-		for y in xrange(self.height):
+		for y in range(self.height):
 			lavWave,lavPanner=self.lavWaves[y]
 			lavPanner.mul.value=lavPanner.mul.value
 			lavPanner.mul.linear_ramp_to_value(fadeLength,volumeRatio)
@@ -83,13 +83,13 @@ class ImagePlayer_pitchStereoGrey(object):
 	def _sweepImage(self,imageData,duration,count):
 		offset=0
 		totalVolumes=[0]*self.width
-		for y in xrange(self.height):
+		for y in range(self.height):
 			index=-1-y;
 			lavWave,lavPanner=self.lavWaves[index]
 			lavPanner.mul=0
 			lavWave.mul=0
 			envelopeValues=[0]
-			for x in xrange(self.width):
+			for x in range(self.width):
 				px=rgbPixelBrightness(imageData[y][x])
 				if self.reverseBrightness:
 					px=maxBrightness-px
@@ -98,7 +98,7 @@ class ImagePlayer_pitchStereoGrey(object):
 			envelopeValues.append(0)
 			totalVolumes[x]+=volume
 			offset=0
-			for c in xrange(count):
+			for c in range(count):
 				lavWave.mul.set(offset,0)
 				offset+=sweepGap
 				lavWave.mul.envelope(time=offset,duration=duration,values=envelopeValues)
@@ -108,17 +108,17 @@ class ImagePlayer_pitchStereoGrey(object):
 		self.lavPanner.azimuth=-90
 		self.lavPanner.mul=0
 		offset=0
-		for c in xrange(count):
+		for c in range(count):
 			self.lavPanner.azimuth.set(offset,-90)
 			self.lavPanner.mul.set(offset,0)
 			offset+=sweepGap
-			self.lavPanner.azimuth.envelope(time=offset,duration=duration,values=list(xrange(-90,91)))
+			self.lavPanner.azimuth.envelope(time=offset,duration=duration,values=list(range(-90,91)))
 			self.lavPanner.mul.envelope(time=offset,duration=duration,values=totalVolumes)
 			offset+=duration
 
 	def _stop(self):
 		self.lavPanner.azimuth.value=0
-		for y in xrange(self.height):
+		for y in range(self.height):
 			lavWave=self.lavWaves[y][0]
 			lavWave.mul.value=lavWave.mul.value
 			lavWave.mul.linear_ramp_to_value(fadeLength,0)
@@ -126,7 +126,7 @@ class ImagePlayer_pitchStereoGrey(object):
 	def setNewImage(self,imageData,detailed=False):
 		if self._sweeperCallback:
 			self._sweeperCallback.Stop()
-		with self.lavSim: 
+		with self.lavServer: 
 			if not imageData:
 				self._stop()
 			else:
@@ -138,7 +138,7 @@ class ImagePlayer_pitchStereoGrey(object):
 
 	def terminate(self):
 		self.setNewImage(None)
-		self.lavSim.clear_output_device()
+		self.lavServer.clear_output_device()
 
 class ImagePlayer_hsv(object):
 
@@ -147,26 +147,26 @@ class ImagePlayer_hsv(object):
 		self.height=height
 		self.lowFreq=lowFreq
 		self.highFreq=highFreq
-		self.lavSim=libaudioverse.Simulation()
-		self.lavWave=libaudioverse.AdditiveSawNode(self.lavSim)
+		self.lavServer=libaudioverse.Server()
+		self.lavWave=libaudioverse.AdditiveSawNode(self.lavServer)
 		self.lavWave.mul=0
 		self.lavWave.frequency.value=lowFreq
-		self.lavWave.connect_simulation(0)
-		self.lavWave2=libaudioverse.SineNode(self.lavSim)
+		self.lavWave.connect(0,self.lavServer)
+		self.lavWave2=libaudioverse.SineNode(self.lavServer)
 		self.lavWave2.mul=0
 		self.lavWave2.frequency.value=lowFreq*(highFreq/lowFreq)
-		self.lavWave2.connect_simulation(0)
-		self.lavNoise=libaudioverse.NoiseNode(self.lavSim)
+		self.lavWave2.connect(0,self.lavServer)
+		self.lavNoise=libaudioverse.NoiseNode(self.lavServer)
 		self.lavNoise.mul.value=0
 		self.lavNoise.noise_type.value=libaudioverse.NoiseTypes.brown
-		self.lavNoise.connect_simulation(0)
-		self.lavSim.set_output_device(-1)
+		self.lavNoise.connect(0,self.lavServer)
+		self.lavServer.set_output_device("default")
 
 	def setNewImage(self,imageData,detailed=False):
 		r=g=b=0
 		if imageData is not None:
-			for x in xrange(self.height):
-				for y in xrange(self.width):
+			for x in range(self.height):
+				for y in range(self.width):
 					px=imageData[y][x]
 					r+=px.rgbRed
 					g+=px.rgbGreen
@@ -186,4 +186,4 @@ class ImagePlayer_hsv(object):
 		self.lavNoise.mul.value=(1-s)*v*0.4
 
 	def terminate(self):
-		self.lavSim.clear_output_device()
+		self.lavServer.clear_output_device()

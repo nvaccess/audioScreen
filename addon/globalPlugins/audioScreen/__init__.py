@@ -5,7 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__),'deps'))
 
 import ctypes
 import wx
-import libaudioverse
+from . import libaudioverse
 import config
 from gui.settingsDialogs import SettingsDialog
 import gui
@@ -13,7 +13,7 @@ import globalPluginHandler
 import touchHandler
 import globalCommands
 import api
-import screenBitmap
+from . import screenBitmap
 import textInfos
 import ui
 from . import imagePlayer
@@ -152,7 +152,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if modeInfo[1] is None:
 			if report: ui.message(_("AudioScreen off"))
 		else:
-			modeConf={k:v for k,v in config.conf["audioScreen_%s"%modeInfo[1].__name__].iteritems()}
+			modeConf={k:v for k,v in config.conf["audioScreen_%s"%modeInfo[1].__name__].items()}
 			self.captureWidth=modeConf.pop('captureWidth',modeConf['width'])
 			self.captureHeight=modeConf.pop('captureHeight',modeConf['height'])
 			self.imagePlayer=modeInfo[1](**modeConf)
